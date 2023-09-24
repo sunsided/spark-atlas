@@ -25,11 +25,19 @@ services:
         flavor: master
     image: spark-master
     container_name: spark-master
+    environment:
+      - SPARK_PACKAGES=org.mongodb.spark:mongo-spark-connector_2.12:10.2.0
+    expose:
+      - 7077
     ports:
       - "8090:8080"
       - "7077:7077"
     volumes:
       - shared-workspace:/opt/workspace
+      #- type: bind
+      #  read_only: true
+      #  source: jars/
+      #  target: /spark/extra-jars
 
   spark-worker-1:
     build:
@@ -43,10 +51,15 @@ services:
       - SPARK_WORKER_CORES=2
       - SPARK_WORKER_MEMORY=4g
       - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_PACKAGES=org.mongodb.spark:mongo-spark-connector_2.12:10.2.0
     ports:
       - "8081:8081"
     volumes:
       - shared-workspace:/opt/workspace
+      #- type: bind
+      #  read_only: true
+      #  source: jars/
+      #  target: /spark/extra-jars
     depends_on:
       - spark-master
 
@@ -62,10 +75,15 @@ services:
       - SPARK_WORKER_CORES=4
       - SPARK_WORKER_MEMORY=4g
       - SPARK_MASTER=spark://spark-master:7077
+      - SPARK_PACKAGES=org.mongodb.spark:mongo-spark-connector_2.12:10.2.0
     ports:
       - "8082:8081"
     volumes:
       - shared-workspace:/opt/workspace
+      #- type: bind
+      #  read_only: true
+      #  source: jars/
+      #  target: /spark/extra-jars
     depends_on:
       - spark-master
 

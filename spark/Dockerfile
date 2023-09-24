@@ -1,6 +1,7 @@
 ARG flavor=master
 
 # https://github.com/big-data-europe/docker-spark
+# Spark 3.3.0 for Hadoop 3.3 with OpenJDK 8 and Scala 2.12
 FROM bde2020/spark-${flavor}:3.3.0-hadoop3.3
 LABEL authors="Markus Mayer"
 
