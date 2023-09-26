@@ -7,6 +7,7 @@ LABEL authors="Markus Mayer"
 
 # Download MongoDB Spark Connector and move it to the jars directory
 # See https://www.mongodb.com/docs/spark-connector/current/
+RUN wget https://repo1.maven.org/maven2/org/mongodb/spark/mongo-spark-connector/10.0.5/mongo-spark-connector-10.0.5.jar -P /spark/jars
 RUN wget https://repo1.maven.org/maven2/org/mongodb/spark/mongo-spark-connector_2.12/10.2.0/mongo-spark-connector_2.12-10.2.0.jar -P /spark/jars
 RUN wget https://repo1.maven.org/maven2/org/mongodb/mongodb-driver-sync/4.8.2/mongodb-driver-sync-4.8.2.jar -P /spark/jars
 RUN wget https://repo1.maven.org/maven2/org/mongodb/mongodb-driver-core/4.8.2/mongodb-driver-core-4.8.2.jar -P /spark/jars
