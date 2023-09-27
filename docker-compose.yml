@@ -3,7 +3,7 @@ version: "3.6"
 
 services:
   jupyterlab:
-    image: jupyter/pyspark-notebook:spark-3.3.0
+    image: jupyter/pyspark-notebook:spark-3.5.0
     container_name: jupyterlab
     environment:
       - JUPYTER_ENABLE_LAB=yes
@@ -19,14 +19,15 @@ services:
 
   spark-master:
     build:
-      dockerfile: Dockerfile
       context: spark
-      args:
-        flavor: master
+      dockerfile: custom.Dockerfile
+      target: master
     image: spark-master
     container_name: spark-master
     environment:
-      - SPARK_PACKAGES=org.mongodb.spark:mongo-spark-connector_2.12:10.2.0
+      - SPARK_PUBLIC_DNS=spark-master
+      - SPARK_MASTER_HOST=spark-master
+      - SPARK_MASTER_PORT=7077
     expose:
       - 7077
     ports:
@@ -41,19 +42,19 @@ services:
 
   spark-worker-1:
     build:
-      dockerfile: Dockerfile
       context: spark
-      args:
-        flavor: worker
+      dockerfile: custom.Dockerfile
+      target: worker
     image: spark-worker
     container_name: spark-worker-1
     environment:
+      - SPARK_PUBLIC_DNS=spark-worker-1
       - SPARK_WORKER_CORES=2
       - SPARK_WORKER_MEMORY=4g
       - SPARK_MASTER=spark://spark-master:7077
-      - SPARK_PACKAGES=org.mongodb.spark:mongo-spark-connector_2.12:10.2.0
     ports:
       - "8081:8081"
+      - "4041:4040"
     volumes:
       - shared-workspace:/opt/workspace
       #- type: bind
@@ -65,19 +66,19 @@ services:
 
   spark-worker-2:
     build:
-      dockerfile: Dockerfile
       context: spark
-      args:
-        flavor: worker
+      dockerfile: custom.Dockerfile
+      target: worker
     image: spark-worker
     container_name: spark-worker-2
     environment:
+      - SPARK_PUBLIC_DNS=spark-worker-2
       - SPARK_WORKER_CORES=4
       - SPARK_WORKER_MEMORY=4g
       - SPARK_MASTER=spark://spark-master:7077
-      - SPARK_PACKAGES=org.mongodb.spark:mongo-spark-connector_2.12:10.2.0
     ports:
       - "8082:8081"
+      - "4042:4040"
     volumes:
       - shared-workspace:/opt/workspace
       #- type: bind
