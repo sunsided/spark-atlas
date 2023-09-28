@@ -3,7 +3,10 @@ version: "3.6"
 
 services:
   jupyterlab:
-    image: jupyter/pyspark-notebook:spark-3.5.0
+    build:
+      context: jupyter
+      dockerfile: Dockerfile
+    image: pyspark-notebook
     container_name: jupyterlab
     environment:
       - JUPYTER_ENABLE_LAB=yes
@@ -20,7 +23,7 @@ services:
   spark-master:
     build:
       context: spark
-      dockerfile: custom.Dockerfile
+      dockerfile: Dockerfile
       target: master
     image: spark-master
     container_name: spark-master
@@ -43,7 +46,7 @@ services:
   spark-worker-1:
     build:
       context: spark
-      dockerfile: custom.Dockerfile
+      dockerfile: Dockerfile
       target: worker
     image: spark-worker
     container_name: spark-worker-1
@@ -67,7 +70,7 @@ services:
   spark-worker-2:
     build:
       context: spark
-      dockerfile: custom.Dockerfile
+      dockerfile: Dockerfile
       target: worker
     image: spark-worker
     container_name: spark-worker-2
@@ -89,7 +92,7 @@ services:
       - spark-master
 
   spark-history-server:
-    image: bde2020/spark-history-server:3.3.0-hadoop3.3
+    image: bde2020/spark-history-server:3.2.0-hadoop3.2
     container_name: spark-history-server
     depends_on:
       - spark-master
