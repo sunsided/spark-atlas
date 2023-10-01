@@ -7,6 +7,7 @@ FROM ubuntu:23.04 AS base
 # Setup Spark Version Requirements
 ENV SPARK_HOME=/usr/local/spark
 ARG SPARK_V="3.2.4"
+ARG PYSPARK_V="3.2.0"
 ARG HADOOP_V="3.2"
 ARG SCALA_V="12"
 ARG OPENJDK_V="8"
@@ -33,7 +34,7 @@ RUN apt-get update && apt-get upgrade -y && \
 # Install python
 RUN apt-get update --fix-missing && apt-get upgrade -y && \
     apt-get install -y sudo dialog git openssh-server wget \
-    curl cmake nano python3 python3-pip python3-setuptools \
+    curl cmake nano python3 python3-pip python3-venv python3-setuptools \
     build-essential libpq-dev gdal-bin libgdal-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -47,20 +48,6 @@ RUN apt-get autoclean && apt-get autoremove && \
     apt-get update --fix-missing && apt-get upgrade -y && \
     dpkg --configure -a && apt-get install -f && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Install Non-Spark Python Packages
-
-# PEP668 - StackOverflow (apt & pip collision avoidance via venv)
-# https://stackoverflow.com/questions/75602063/pip-install-r-requirements-txt-is-failing-this-environment-is-externally-manag
-# Option1: python3 -m venv .venv && source .venv/bin/activate
-# Option2: pip install xyz --break-system-packages
-
-RUN pip3 install \
-    GDAL numpy pandas rtree IPython \
-    geopandas geoparquet plotly \
-    rasterio folium descartes \
-    cloudpathlib \
-    --break-system-packages
 
 # Spark installation
 WORKDIR /tmp
@@ -80,10 +67,24 @@ ENV SPARK_OPTS="--driver-java-options=-Xms1024M --driver-java-options=-Xmx4096M 
 RUN mkdir -p /usr/local/bin/before-notebook.d
 RUN ln -s "${SPARK_HOME}/sbin/spark-config.sh" /usr/local/bin/before-notebook.d/spark-config.sh
 
+# Install Non-Spark Python Packages
+
+# PEP668 - StackOverflow (apt & pip collision avoidance via venv)
+# https://stackoverflow.com/questions/75602063/pip-install-r-requirements-txt-is-failing-this-environment-is-externally-manag
+# Option1: python3 -m venv .venv && source .venv/bin/activate
+# Option2: pip install xyz --break-system-packages
+
+RUN pip3 install \
+    GDAL numpy pandas rtree IPython \
+    geopandas geoparquet plotly jupyterlab \
+    rasterio folium descartes \
+    cloudpathlib python-dotenv \
+    --break-system-packages
+
 # Install Spark Python Packages
 RUN pip3 install \
     scipy pyarrow py4j findspark \
-    pyspark pyspark[sql] pyspark[pandas_on_spark] \
+    pyspark[sql,pandas_on_spark,streaming,ml]==${PYSPARK_V} \
     --break-system-packages
 
 # Install MongoDB Connector for Spark
@@ -101,6 +102,19 @@ COPY spark-defaults.conf "${SPARK_HOME}/conf/"
 COPY log4j2.properties "${SPARK_HOME}/conf/"
 
 WORKDIR /home
+
+FROM base AS jupyter
+ENV SPARK_MASTER_HOST=spark-master
+ENV SPARK_MASTER_PORT=7077
+ENV PYTHONUNBUFFERED=1
+RUN useradd -ms /bin/bash jovyan
+RUN usermod -a -G sudo jovyan
+USER jovyan
+ENV PATH="/home/jovyan/pyspark_venv/bin:$PATH"
+RUN python3 -m venv /home/jovyan/pyspark_venv
+EXPOSE 8888
+WORKDIR /home/jovyan/notebooks
+CMD ["jupyter", "lab", "--ip='*'", "--port=8888", "--no-browser"]
 
 FROM base AS master
 ENV SPARK_MASTER_HOST=spark-master

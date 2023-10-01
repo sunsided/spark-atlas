@@ -4,14 +4,14 @@ version: "3.6"
 services:
   jupyterlab:
     build:
-      context: jupyter
+      context: spark
       dockerfile: Dockerfile
+      target: jupyter
     image: pyspark-notebook
     container_name: jupyterlab
     environment:
       - JUPYTER_ENABLE_LAB=yes
       - JUPYTER_TOKEN=5f69150501c3c0c4f94f5d4ae38123e2f556777f794bf48b
-      - GRANT_SUDO=yes
     ports:
       - "8888:8888"
     volumes:
