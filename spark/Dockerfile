@@ -6,18 +6,18 @@ FROM ubuntu:23.04 AS base
 
 # Setup Spark Version Requirements
 ENV SPARK_HOME=/usr/local/spark
-ARG SPARK_V="3.2.4"
-ARG PYSPARK_V="3.2.4"
-ARG HADOOP_V="3.2"
+ARG SPARK_V="3.5.0"
+ARG PYSPARK_V="3.5.0"
+ARG HADOOP_V="3"
 ARG SCALA_V="12"
-ARG OPENJDK_V="8"
+ARG OPENJDK_V="17"
 
 # Apache Spark 3.2.4 with Scala2.12 and Hadoop 3.2 Checksum from https://spark.apache.org/downloads.html
-ARG spark_checksum="b2a49b5b1f764131e61abbd0ae161c8b8541b3636b585b727d03674f2502465f940e5ef2d4dff0c0060bc61184c747ca4ea9145bde74d62ec2e9f281e82408b7"
+# ARG spark_checksum="b2a49b5b1f764131e61abbd0ae161c8b8541b3636b585b727d03674f2502465f940e5ef2d4dff0c0060bc61184c747ca4ea9145bde74d62ec2e9f281e82408b7"
 # Apache Spark 3.4.0 with Scala2.13 Checksum from https://spark.apache.org/downloads.html
 # ARG spark_checksum="90531aeb69500d584087757df5c88b3ab768ee4fb6719b1c80391465dad082a7ed4a05cdfb156c122f13103fad6895b41852ff726c78e3f0a457cafe6b9899e5"
 # Apache Spark 3.5.0 with Scala2.12 Checksum from https://spark.apache.org/downloads.html
-# ARG spark_checksum="8883c67e0a138069e597f3e7d4edbbd5c3a565d50b28644aad02856a1ec1da7cb92b8f80454ca427118f69459ea326eaa073cf7b1a860c3b796f4b07c2101319"
+ARG spark_checksum="8883c67e0a138069e597f3e7d4edbbd5c3a565d50b28644aad02856a1ec1da7cb92b8f80454ca427118f69459ea326eaa073cf7b1a860c3b796f4b07c2101319"
 # Apache Spark 3.5.0 with Scala2.13 Checksum from https://spark.apache.org/downloads.html
 # ARG spark_checksum="b8ed2e5d2994493bd06aea4414057d6c92d8d01d2763626bb2a618d8c026990f155d6414ba0215cc593d991f762d30f55e0eaa1269c123d90f3a8f2cbd3f683c"
 
