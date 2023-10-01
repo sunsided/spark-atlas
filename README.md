@@ -33,9 +33,8 @@ The [Dockerfile](spark/Dockerfile) (as used in [docker-compose.yml](docker-compo
 provides three different Docker targets, namely `master`, `worker` and `jupyter`.
 All three targets share the same `base` images consisting of: 
 
-- [Spark 3.4.1] (Scala 2.12 + Hadoop 3.3)
-- Python 3.11 + PySpark 3.4.1 + [MongoDB Connector for Spark 10.2]
-- Ubuntu 23.04 with Java/OpenJDK 17
+- [Spark 3.4.1] (Scala 2.12 + Hadoop 3.3) + PySpark 3.4.1 + [MongoDB Connector for Spark 10.2]
+- Ubuntu 23.04 with Java/OpenJDK 17 and Python 3.11
 
 Using the same base image for Jupyter Lab and Spark was the only way to
 get this setup working; specifically, having only `master` and `worker` images
