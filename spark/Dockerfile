@@ -7,7 +7,7 @@ FROM ubuntu:23.04 AS base
 # Setup Spark Version Requirements
 ENV SPARK_HOME=/usr/local/spark
 ARG SPARK_V="3.2.4"
-ARG PYSPARK_V="3.2.0"
+ARG PYSPARK_V="3.2.4"
 ARG HADOOP_V="3.2"
 ARG SCALA_V="12"
 ARG OPENJDK_V="8"
