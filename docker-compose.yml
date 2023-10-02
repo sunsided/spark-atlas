@@ -19,6 +19,8 @@ services:
       - type: bind
         source: notebooks/
         target: /home/jovyan/notebooks
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   spark-master:
     build:
@@ -42,6 +44,8 @@ services:
       #  read_only: true
       #  source: jars/
       #  target: /spark/extra-jars
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   spark-worker-1:
     build:
@@ -66,6 +70,8 @@ services:
       #  target: /spark/extra-jars
     depends_on:
       - spark-master
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   spark-worker-2:
     build:
@@ -90,6 +96,8 @@ services:
       #  target: /spark/extra-jars
     depends_on:
       - spark-master
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   spark-history-server:
     image: bde2020/spark-history-server:3.2.0-hadoop3.2

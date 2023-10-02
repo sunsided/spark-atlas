@@ -94,15 +94,16 @@ RUN pip3 install \
     --break-system-packages
 
 # Install MongoDB Connector for Spark
+# https://www.mongodb.com/docs/spark-connector/v10.2/
 RUN wget https://repo1.maven.org/maven2/org/mongodb/spark/mongo-spark-connector_2.${SCALA_V}/10.2.0/mongo-spark-connector_2.${SCALA_V}-10.2.0.jar -P "${SPARK_HOME}/jars"
 RUN wget https://repo1.maven.org/maven2/org/mongodb/mongodb-driver-sync/4.8.2/mongodb-driver-sync-4.8.2.jar -P "${SPARK_HOME}/jars"
 RUN wget https://repo1.maven.org/maven2/org/mongodb/mongodb-driver-core/4.8.2/mongodb-driver-core-4.8.2.jar -P "${SPARK_HOME}/jars"
 RUN wget https://repo1.maven.org/maven2/org/mongodb/bson/4.8.2/bson-4.8.2.jar -P "${SPARK_HOME}/jars"
 RUN wget https://repo1.maven.org/maven2/org/mongodb/bson-record-codec/4.8.2/bson-record-codec-4.8.2.jar -P "${SPARK_HOME}/jars"
 
-# RUN wget https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.6/slf4j-api-1.7.6.jar -P "${SPARK_HOME}/jars"
-# RUN wget https://repo1.maven.org/maven2/io/netty/netty-tcnative-classes/2.0.54.Final/netty-tcnative-classes-2.0.54.Final.jar -P "${SPARK_HOME}/jars"
-# RUN wget https://repo1.maven.org/maven2/io/netty/netty-tcnative/2.0.54.Final/netty-tcnative-2.0.54.Final.jar -P "${SPARK_HOME}/jars"
+# Singlestore
+# https://github.com/memsql/S2-JDBC-Connector/releases
+RUN wget https://github.com/memsql/S2-JDBC-Connector/releases/download/v1.1.9/singlestore-jdbc-client-1.1.9.jar -P "${SPARK_HOME}/jars"
 
 COPY spark-defaults.conf "${SPARK_HOME}/conf/"
 COPY log4j2.properties "${SPARK_HOME}/conf/"
